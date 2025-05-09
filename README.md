@@ -40,11 +40,19 @@ Your AQI Dashboard will be live!
 
 ![Screenshot 2025-04-06 101709](https://github.com/user-attachments/assets/493994bb-e29d-4f62-9612-f2fe23ba98a3)
 
+
+
 ![Screenshot 2025-04-06 101759](https://github.com/user-attachments/assets/fe0db97f-f006-4f2e-9673-9e95d16240b6)
+
+
 
 ![Screenshot 2025-04-06 101833](https://github.com/user-attachments/assets/e8cf560d-dd95-4d60-aa86-06b98dc13274)
 
+
+
 ![Screenshot 2025-04-06 101935](https://github.com/user-attachments/assets/574c3d50-fefe-4d8c-bd89-de6f009ef939)
+
+
 
 ![Screenshot 2025-04-06 102000](https://github.com/user-attachments/assets/53dde63f-10c1-41ed-a548-24850af92d80)
 
