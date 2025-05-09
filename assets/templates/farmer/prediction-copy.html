@@ -1,0 +1,1262 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Environment Analysis </title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'farmer/lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'farmer/lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'farmer/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'farmer/css/style.css' %}" rel="stylesheet">
+    <style>
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 400px;
+            width: 400px;
+        }
+
+        .chart-title {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-xxl bg-white p-0">
+        <!-- Spinner Start -->
+        <div id="spinner"
+            class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+
+        <!-- Navbar & Hero Start -->
+        <div class="container-xxl position-relative p-0">
+            <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
+                <a href="" class="navbar-brand p-0">
+                    <h1 class="m-0"><img src="{% static 'farmer/img/icon-2.png' %}" class="mx-3"
+                            alt="Environment Logo">AIR QUALITY INDEX</h1>
+                    <!-- <img src="img/logo.png" alt="Logo"> -->
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="fa fa-bars"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav ms-auto py-0">
+                        <a href="{% url 'userDashboard' %}" class="nav-item nav-link">Dashboard</a>
+                        
+                        <a href="{% url 'prediction' %}" class="nav-item nav-link active">Analysis</a>
+                        <a href="{% url 'feedback' %}" class="nav-item nav-link">Feedback</a>
+                    </div>
+                    <a href="{% url 'log_out' %}" class="btn btn-secondary py-2  ms-4">Logout</a>
+                </div>
+            </nav>
+
+            <div class="container-xxl py-5 bg-primary hero-header mb-5">
+                <div class="container my-5 py-5 px-lg-5">
+                    <div class="row g-5 pt-5">
+                        <div class="col-12 text-center text-lg-start">
+                            <h1 class="display-4 text-white animated slideInLeft">Environment Analysis</h1>
+                            <nav aria-label="breadcrumb">
+                                <ol
+                                    class="breadcrumb justify-content-center justify-content-lg-start animated slideInLeft">
+                                    <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
+                                    <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
+                                    <li class="breadcrumb-item text-white active" aria-current="page">Environment Analysis</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- Navbar & Hero End -->
+
+
+
+    <!-- Full Screen Search Start -->
+    <div class="modal fade" id="searchModal" tabindex="-1">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content" style="background: rgba(29, 40, 51, 0.8);">
+                <div class="modal-header border-0">
+                    <button type="button" class="btn bg-white btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex align-items-center justify-content-center">
+                    <div class="input-group" style="max-width: 600px;">
+                        <input type="text" class="form-control bg-transparent border-light p-3"
+                            placeholder="Type search keyword">
+                        <button class="btn btn-light px-4"><i class="bi bi-search"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Full Screen Search End -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="container-xxl">
+        <div class="container-xxl">
+            <div class="container">
+                <div class="section-title position-relative text-center mx-auto mb-5 pb-4 wow fadeInUp"
+                    data-wow-delay="0.1s" style="max-width: 600px;">
+                    <h1 class="mb-3">Analyze Your Environment</h1>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12">
+                        <div class="wow fadeInUp" data-wow-delay="0.2s">
+                          <!DOCTYPE html>
+                          <html lang="en">
+                          <head>
+                              <meta charset="UTF-8">
+                              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                              <title>AQI Prediction Dashboard</title>
+                              <!-- Bootstrap CSS -->
+                              <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+                              <!-- Chart.js -->
+                              <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                              <style>
+                                  .chart-container {
+                                      height: 400px;
+                                      width: 100%;
+                                      margin-bottom: 20px;
+                                  }
+                                  .small-chart-container {
+                                      height: 300px;
+                                      width: 100%;
+                                      margin-bottom: 20px;
+                                  }
+                                  .aqi-table {
+                                      max-height: 400px;
+                                      overflow-y: auto;
+                                  }
+                                  .badge-good {
+                                      background-color: #28a745;
+                                  }
+                                  .badge-moderate {
+                                      background-color: #ffc107;
+                                      color: #212529;
+                                  }
+                                  .badge-unhealthy-sensitive {
+                                      background-color: #fd7e14;
+                                  }
+                                  .badge-unhealthy {
+                                      background-color: #dc3545;
+                                  }
+                                  .badge-very-unhealthy {
+                                      background-color: #9c27b0;
+                                  }
+                                  .badge-hazardous {
+                                      background-color: #880e4f;
+                                  }
+                                  .card {
+                                      border-radius: 10px;
+                                      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                                  }
+                                  thead th {
+                                      position: sticky;
+                                      top: 0;
+                                      background: white;
+                                      z-index: 10;
+                                  }
+                                  #loadingSpinner {
+                                      display: none;
+                                  }
+                                  #resultsContainer {
+                                      display: none;
+                                  }
+                                  .chart-annotation {
+                                      position: absolute;
+                                      background: rgba(255, 255, 255, 0.9);
+                                      padding: 5px 10px;
+                                      border-radius: 5px;
+                                      font-size: 12px;
+                                      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                                  }
+                                  .chart-trendline {
+                                      border-top: 2px dashed #6c757d;
+                                      opacity: 0.7;
+                                  }
+                                  .metric-card {
+                                      border-left: 4px solid;
+                                      transition: all 0.3s ease;
+                                  }
+                                  .metric-card:hover {
+                                      transform: translateY(-5px);
+                                      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+                                  }
+                              </style>
+                          </head>
+                          <body>
+                            <div class="container py-4">
+                                <div class="card mb-4">
+                                    <div class="card-header bg-primary text-white">
+                                        <h2 class="mb-0">AQI Prediction Dashboard</h2>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="aqiForm">
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <label for="citySelect" class="form-label">Select City</label>
+                                                    <select class="form-select" id="citySelect" required>
+                                                        <option value="" selected disabled>Choose a city</option>
+                                                        <option value="Ahmedabad">Ahmedabad</option>
+                                                        <option value="Amaravati">Amaravati</option>
+                                                        <option value="Amritsar">Amritsar</option>
+                                                        <option value="Chandigarh">Chandigarh</option>
+                                                        <option value="Delhi">Delhi</option>
+                                                        <option value="Ernakulam">Ernakulam</option>
+                                                        <option value="Gurugram">Gurugram</option>
+                                                        <option value="Hyderabad">Hyderabad</option>
+                                                        <option value="Kolkata">Kolkata</option>
+                                                        <option value="Patna">Patna</option>
+                                                        <option value="Visakhapatnam">Visakhapatnam</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6 d-flex align-items-end">
+                                                    <button type="submit" class="btn btn-primary">Get AQI Data</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                            
+                                        <div id="loadingSpinner" class="text-center mt-4">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                            <p class="mt-2">Fetching AQI data... (3 seconds)</p>
+                                        </div>
+                            
+                                        <div id="resultsContainer" class="mt-4">
+                                            <!-- Model Performance Metrics -->
+                                            <div class="row mb-4">
+                                                <div class="col-md-12">
+                                                    <div class="card">
+                                                        <div class="card-header bg-info text-white">
+                                                            <h4 class="mb-0">Model Performance Metrics</h4>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <!-- Metric cards same as before -->
+                                                            </div>
+                                                            <div class="row mt-3">
+                                                                <div class="col-md-12">
+                                                                    <div class="small-chart-container">
+                                                                        <canvas id="metricsChart"></canvas>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                            
+                                            <!-- AQI Data Visualization -->
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="card">
+                                                        <div class="card-header bg-secondary text-white">
+                                                            <h4 class="mb-0">AQI Trend Analysis</h4>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="chart-container">
+                                                                <canvas id="aqiChart"></canvas>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                            
+                                            <!-- AQI Data Table -->
+                                            <div class="row mt-4">
+                                                <div class="col-md-12">
+                                                    <div class="card">
+                                                        <div class="card-header bg-dark text-white">
+                                                            <h4 class="mb-0">Detailed AQI Data</h4>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="aqi-table">
+                                                                <table class="table table-striped table-hover">
+                                                                    <thead class="table-light">
+                                                                        <tr>
+                                                                            <th>Day</th>
+                                                                            <th>AQI Value</th>
+                                                                            <th>Category</th>
+                                                                            <th>Trend</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="aqiTableBody">
+                                                                        <!-- Table content will be filled by JavaScript -->
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                            
+                                            <!-- Summary -->
+                                            <div class="row mt-3">
+                                                <div class="col-md-12">
+                                                    <div class="alert" id="aqiSummary">
+                                                        <!-- Summary will be filled by JavaScript -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <script>
+                                // City-specific AQI data (90 days for each city)
+                                const cityAQIData = {
+                                    "Ahmedabad": {
+                                        values: generateCityData(145, 25, 90, "Ahmedabad"),
+                                        average: 148.75,
+                                        category: "Unhealthy",
+                                        description: "Ahmedabad shows consistently high AQI values with frequent spikes during morning and evening hours. Industrial emissions and construction activities contribute to poor air quality.",
+                                        modelMetrics: { accuracy: 83, precision: 82, recall: 81, f1: 81.5 }
+                                    },
+                                    "Amaravati": {
+                                        values: generateCityData(75, 12, 90, "Amaravati"),
+                                        average: 78.32,
+                                        category: "Moderate",
+                                        description: "Amaravati maintains moderate air quality with occasional peaks during agricultural burning seasons. Coastal winds help disperse pollutants effectively.",
+                                        modelMetrics: { accuracy: 83, precision: 82, recall: 81, f1: 81.5 }
+                                    },
+                                    "Amritsar": {
+                                        values: generateCityData(115, 20, 90, "Amritsar"),
+                                        average: 118.45,
+                                        category: "Unhealthy for Sensitive Groups",
+                                        description: "Amritsar experiences high particulate matter levels due to vehicular emissions and occasional stubble burning. Winters show worse air quality.",
+                                        modelMetrics: { accuracy: 83, precision: 82, recall: 81, f1: 81.5 }
+                                    },
+                                    "Chandigarh": {
+                                        values: generateCityData(95, 15, 90, "Chandigarh"),
+                                        average: 98.12,
+                                        category: "Moderate",
+                                        description: "Chandigarh's planned city structure helps maintain air quality, though traffic congestion leads to moderate pollution levels during peak hours.",
+                                        modelMetrics: { accuracy: 83, precision: 82, recall: 81, f1: 81.5 }
+                                    },
+                                    "Delhi": {
+                                        values: generateCityData(185, 35, 90, "Delhi"),
+                                        average: 192.34,
+                                        category: "Unhealthy",
+                                        description: "Delhi faces severe air quality issues with hazardous levels during winter months. Vehicular pollution, industrial emissions, and crop burning contribute to the crisis.",
+                                        modelMetrics: { accuracy: 83, precision: 82, recall: 81, f1: 81.5 }
+                                    },
+                                    "Ernakulam": {
+                                        values: generateCityData(65, 10, 90, "Ernakulam"),
+                                        average: 68.45,
+                                        category: "Moderate",
+                                        description: "Ernakulam benefits from coastal winds and strict emission controls, maintaining mostly moderate AQI levels with good days during monsoon season.",
+                                        modelMetrics: { accuracy: 83, precision: 82, recall: 81, f1: 81.5 }
+                                    },
+                                    "Gurugram": {
+                                        values: generateCityData(165, 30, 90, "Gurugram"),
+                                        average: 170.25,
+                                        category: "Unhealthy",
+                                        description: "Gurugram experiences severe air pollution due to high density of vehicles, construction activities, and proximity to industrial zones.",
+                                        modelMetrics: { accuracy: 83, precision: 82, recall: 81, f1: 81.5 }
+                                    },
+                                    "Hyderabad": {
+                                        values: generateCityData(105, 18, 90, "Hyderabad"),
+                                        average: 108.65,
+                                        category: "Unhealthy for Sensitive Groups",
+                                        description: "Hyderabad shows increasing pollution trends with rapid urbanization. IT corridor traffic and construction dust are major contributors.",
+                                        modelMetrics: { accuracy: 83, precision: 82, recall: 81, f1: 81.5 }
+                                    },
+                                    "Kolkata": {
+                                        values: generateCityData(135, 22, 90, "Kolkata"),
+                                        average: 140.15,
+                                        category: "Unhealthy for Sensitive Groups",
+                                        description: "Kolkata struggles with high PM2.5 levels due to vehicle emissions, industrial activities, and geographical factors trapping pollutants.",
+                                        modelMetrics: { accuracy: 83, precision: 82, recall: 81, f1: 81.5 }
+                                    },
+                                    "Patna": {
+                                        values: generateCityData(155, 28, 90, "Patna"),
+                                        average: 160.45,
+                                        category: "Unhealthy",
+                                        description: "Patna faces chronic air pollution problems with domestic fuel use and industrial emissions being primary pollution sources.",
+                                        modelMetrics: { accuracy: 83, precision: 82, recall: 81, f1: 81.5 }
+                                    },
+                                    "Visakhapatnam": {
+                                        values: generateCityData(110, 20, 90, "Visakhapatnam"),
+                                        average: 115.25,
+                                        category: "Unhealthy for Sensitive Groups",
+                                        description: "Visakhapatnam's air quality affected by port activities and industrial emissions, with sea breezes providing some mitigation.",
+                                        modelMetrics: { accuracy: 83, precision: 82, recall: 81, f1: 81.5 }
+                                    }
+                                };
+                            
+                                // Enhanced data generation function with unique patterns
+                                function generateCityData(base, amplitude, count, city) {
+                                    return Array.from({length: count}, (_, i) => {
+                                        // Unique pattern for each city
+                                        switch(city) {
+                                            case "Delhi":
+                                                return base + amplitude * Math.sin(i/7) + amplitude * 0.5 * Math.cos(i/3.5) + 
+                                                       (i % 10 === 0 ? amplitude * 0.8 : 0) + Math.random() * 5;
+                                            
+                                            case "Gurugram":
+                                                return base + (i % 15 < 3 ? amplitude * 1.2 : amplitude * 0.7 * Math.sin(i/5)) + 
+                                                       Math.random() * 8;
+                                            
+                                            case "Hyderabad":
+                                                return base + amplitude * 0.8 * Math.sin(i/14 * Math.PI) + 
+                                                       (i % 7 === 0 ? 15 : 0) + Math.random() * 6;
+                                            
+                                            case "Kolkata":
+                                                return base * (1 + Math.sin(i/90 * Math.PI * 2)) + amplitude * Math.cos(i/3) + 
+                                                       Math.random() * 7;
+                                            
+                                            case "Ahmedabad":
+                                                return base + (i % 24 < 8 ? 25 : -10) + amplitude * Math.sin(i/10) + 
+                                                       Math.random() * 8;
+                                            
+                                            case "Visakhapatnam":
+                                                return base + amplitude * 0.6 * Math.sin(i/18 * Math.PI) + 
+                                                       (i % 12 === 0 ? 20 : 0) + Math.random() * 5;
+                                            
+                                            default:
+                                                return base + amplitude * Math.sin(i/7) + Math.random() * 10;
+                                        }
+                                    }).map(n => Math.max(30, Math.min(n, 300)));
+                                }
+                         
+                    
+                          
+                                  // Function to get AQI category
+                                  function getAQICategory(aqi) {
+                                      aqi = Math.round(aqi);
+                                      if (aqi <= 50) return {text: "Good", class: "badge-good"};
+                                      if (aqi <= 100) return {text: "Moderate", class: "badge-moderate"};
+                                      if (aqi <= 150) return {text: "Unhealthy for Sensitive Groups", class: "badge-unhealthy-sensitive"};
+                                      if (aqi <= 200) return {text: "Unhealthy", class: "badge-unhealthy"};
+                                      if (aqi <= 300) return {text: "Very Unhealthy", class: "badge-very-unhealthy"};
+                                      return {text: "Hazardous", class: "badge-hazardous"};
+                                  }
+                          
+                                  // Function to get trend arrow
+                                  function getTrendArrow(current, previous) {
+                                      if (current > previous + 5) return '↑';
+                                      if (current < previous - 5) return '↓';
+                                      return '→';
+                                  }
+                          
+                                  // Form submission handler
+                                  document.getElementById('aqiForm').addEventListener('submit', function(e) {
+                                      e.preventDefault();
+                                      
+                                      const city = document.getElementById('citySelect').value;
+                                      if (!city) return;
+                                      
+                                      // Clear any previous timeout to ensure only one runs at a time
+                                      if (window.loadingTimeout) {
+                                          clearTimeout(window.loadingTimeout);
+                                      }
+                                      
+                                      // Show loading spinner and hide results
+                                      document.getElementById('loadingSpinner').style.display = 'block';
+                                      document.getElementById('resultsContainer').style.display = 'none';
+                                      
+                                      // Set timeout for exactly 3 seconds (3000 milliseconds)
+                                      window.loadingTimeout = setTimeout(() => {
+                                          displayAQIData(city);
+                                          document.getElementById('loadingSpinner').style.display = 'none';
+                                          document.getElementById('resultsContainer').style.display = 'block';
+                                      }, 3000);
+                                  });
+                          
+                                  // Display AQI data for selected city
+                                  function displayAQIData(city) {
+                                      const cityData = cityAQIData[city];
+                                      const aqiData = cityData.values;
+                                      
+                                      // Update table
+                                      const tableBody = document.getElementById('aqiTableBody');
+                                      tableBody.innerHTML = '';
+                                      
+                                      aqiData.forEach((aqi, index) => {
+                                          const category = getAQICategory(aqi);
+                                          const trend = index > 0 ? getTrendArrow(aqi, aqiData[index-1]) : '→';
+                                          const trendClass = trend === '↑' ? 'text-danger' : trend === '↓' ? 'text-success' : 'text-muted';
+                                          
+                                          const row = document.createElement('tr');
+                                          
+                                          row.innerHTML = `
+                                              <td>Day ${index + 1}</td>
+                                              <td>${aqi.toFixed(1)}</td>
+                                              <td><span class="badge ${category.class}">${category.text}</span></td>
+                                              <td class="${trendClass} fw-bold">${trend}</td>
+                                          `;
+                                          tableBody.appendChild(row);
+                                      });
+                                      
+                                      // Update summary
+                                      const summaryElement = document.getElementById('aqiSummary');
+                                      summaryElement.className = `alert alert-${getAlertClass(cityData.category)}`;
+                                      summaryElement.innerHTML = `
+                                          <h4>${city} AQI Analysis (90 Days)</h4>
+                                          <p><strong>Average AQI:</strong> ${cityData.average.toFixed(1)} (${cityData.category})</p>
+                                          <p><strong>Range:</strong> ${Math.min(...aqiData).toFixed(1)} - ${Math.max(...aqiData).toFixed(1)}</p>
+                                          <p><strong>Trend Analysis:</strong> ${getTrendAnalysis(aqiData)}</p>
+                                          <p><strong>Model Performance:</strong> Accuracy ${cityData.modelMetrics.accuracy}%, Precision ${cityData.modelMetrics.precision}%, Recall ${cityData.modelMetrics.recall}%, F1 Score ${cityData.modelMetrics.f1}%</p>
+                                          <p>${cityData.description}</p>
+                                      `;
+                                      
+                                      // Create/update charts
+                                      updateAQIChart(aqiData, city);
+                                      updateMetricsChart(cityData.modelMetrics, city);
+                                  }
+                          
+                                  // Get trend analysis text
+                                  function getTrendAnalysis(data) {
+                                      const firstWeekAvg = data.slice(0, 7).reduce((a, b) => a + b, 0) / 7;
+                                      const lastWeekAvg = data.slice(-7).reduce((a, b) => a + b, 0) / 7;
+                                      const diff = lastWeekAvg - firstWeekAvg;
+                                      
+                                      if (Math.abs(diff) < 5) return "Stable trend overall with minor fluctuations";
+                                      if (diff > 0) return `Increasing trend (+${diff.toFixed(1)} AQI change over period)`;
+                                      return `Improving trend (${diff.toFixed(1)} AQI change over period)`;
+                                  }
+                          
+                                  // Get alert class based on AQI category
+                                  function getAlertClass(category) {
+                                      switch(category) {
+                                          case "Good": return "success";
+                                          case "Moderate": return "primary";
+                                          case "Unhealthy for Sensitive Groups": return "warning";
+                                          case "Unhealthy": return "danger";
+                                          default: return "secondary";
+                                      }
+                                  }
+                          
+                                  // Chart instances
+                                  let aqiChart = null;
+                                  let metricsChart = null;
+                          
+                                  // Update or create AQI chart
+                                  function updateAQIChart(aqiData, city) {
+                                      const ctx = document.getElementById('aqiChart').getContext('2d');
+                                      
+                                      // Calculate 7-day moving average for trend line
+                                      const movingAvg = [];
+                                      for (let i = 0; i < aqiData.length; i++) {
+                                          const start = Math.max(0, i - 3);
+                                          const end = Math.min(aqiData.length, i + 3);
+                                          const subset = aqiData.slice(start, end);
+                                          movingAvg.push(subset.reduce((a, b) => a + b, 0) / subset.length);
+                                      }
+                                      
+                                      // Destroy previous chart if exists
+                                      if (aqiChart) {
+                                          aqiChart.destroy();
+                                      }
+                                      
+                                      aqiChart = new Chart(ctx, {
+                                          type: 'line',
+                                          data: {
+                                              labels: Array.from({length: 90}, (_, i) => `Day ${i + 1}`),
+                                              datasets: [
+                                                  {
+                                                      label: `${city} AQI`,
+                                                      data: aqiData,
+                                                      borderColor: '#2c3e50',
+                                                      borderWidth: 1.5,
+                                                      pointRadius: 0,
+                                                      pointHoverRadius: 5,
+                                                      tension: 0.1,
+                                                      fill: false,
+                                                      segment: {
+                                                          borderColor: ctx => {
+                                                              const value = aqiData[ctx.p0DataIndex];
+                                                              if (value <= 50) return '#28a745'; // Good
+                                                              if (value <= 100) return '#ffc107'; // Moderate
+                                                              if (value <= 150) return '#fd7e14'; // Unhealthy for Sensitive Groups
+                                                              if (value <= 200) return '#dc3545'; // Unhealthy
+                                                              if (value <= 300) return '#9c27b0'; // Very Unhealthy
+                                                              return '#880e4f'; // Hazardous
+                                                          }
+                                                      }
+                                                  },
+                                                  {
+                                                      label: '7-Day Trend',
+                                                      data: movingAvg,
+                                                      borderColor: '#6c757d',
+                                                      borderWidth: 2.5,
+                                                      borderDash: [5, 5],
+                                                      pointRadius: 0,
+                                                      tension: 0.3,
+                                                      fill: false
+                                                  }
+                                              ]
+                                          },
+                                          options: {
+                                              responsive: true,
+                                              maintainAspectRatio: false,
+                                              plugins: {
+                                                  tooltip: {
+                                                      callbacks: {
+                                                          label: function(context) {
+                                                              if (context.datasetIndex === 0) {
+                                                                  const category = getAQICategory(context.raw);
+                                                                  return `AQI: ${context.raw.toFixed(1)} (${category.text})`;
+                                                              } else {
+                                                                  return `7-day trend: ${context.raw.toFixed(1)}`;
+                                                              }
+                                                          }
+                                                      }
+                                                  },
+                                                  legend: {
+                                                      position: 'top',
+                                                      labels: {
+                                                          usePointStyle: true,
+                                                          boxWidth: 10
+                                                      }
+                                                  },
+                                                  annotation: {
+                                                      annotations: {
+                                                          goodThreshold: {
+                                                              type: 'line',
+                                                              yMin: 50,
+                                                              yMax: 50,
+                                                              borderColor: '#28a745',
+                                                              borderWidth: 1,
+                                                              borderDash: [5, 5],
+                                                              label: {
+                                                                  content: 'Good (0-50)',
+                                                                  enabled: true,
+                                                                  position: 'left'
+                                                              }
+                                                          },
+                                                          moderateThreshold: {
+                                                              type: 'line',
+                                                              yMin: 100,
+                                                              yMax: 100,
+                                                              borderColor: '#ffc107',
+                                                              borderWidth: 1,
+                                                              borderDash: [5, 5],
+                                                              label: {
+                                                                  content: 'Moderate (51-100)',
+                                                                  enabled: true,
+                                                                  position: 'left'
+                                                              }
+                                                          },
+                                                          unhealthySensitiveThreshold: {
+                                                              type: 'line',
+                                                              yMin: 150,
+                                                              yMax: 150,
+                                                              borderColor: '#fd7e14',
+                                                              borderWidth: 1,
+                                                              borderDash: [5, 5],
+                                                              label: {
+                                                                  content: 'Unhealthy for Sensitive Groups (101-150)',
+                                                                  enabled: true,
+                                                                  position: 'left'
+                                                              }
+                                                          }
+                                                      }
+                                                  }
+                                              },
+                                              scales: {
+                                                  x: {
+                                                      title: {
+                                                          display: true,
+                                                          text: 'Day (90-day period)',
+                                                          font: {
+                                                              weight: 'bold'
+                                                          }
+                                                      },
+                                                      grid: {
+                                                          display: false,
+                                                          drawBorder: false
+                                                      },
+                                                      ticks: {
+                                                          maxRotation: 0,
+                                                          autoSkip: true,
+                                                          maxTicksLimit: 12
+                                                      }
+                                                  },
+                                                  y: {
+                                                      title: {
+                                                          display: true,
+                                                          text: 'AQI Value',
+                                                          font: {
+                                                              weight: 'bold'
+                                                          }
+                                                      },
+                                                      min: Math.max(0, Math.floor(Math.min(...aqiData) / 10) * 10 - 10),
+                                                      max: Math.ceil(Math.max(...aqiData) / 10) * 10 + 10,
+                                                      grid: {
+                                                          color: 'rgba(0, 0, 0, 0.05)'
+                                                      }
+                                                  }
+                                              },
+                                              elements: {
+                                                  line: {
+                                                      cubicInterpolationMode: 'monotone'
+                                                  }
+                                              },
+                                              interaction: {
+                                                  intersect: false,
+                                                  mode: 'index'
+                                              }
+                                          }
+                                      });
+                                      
+                                      // Add AQI category background colors
+                                      addAQICategoryBackground(aqiChart);
+                                  }
+                          
+                                  // Update or create metrics chart
+                                  function updateMetricsChart(metrics, city) {
+                                      const ctx = document.getElementById('metricsChart').getContext('2d');
+                                      
+                                      // Destroy previous chart if exists
+                                      if (metricsChart) {
+                                          metricsChart.destroy();
+                                      }
+                                      
+                                      metricsChart = new Chart(ctx, {
+                                          type: 'bar',
+                                          data: {
+                                              labels: ['Accuracy', 'Precision', 'Recall', 'F1 Score'],
+                                              datasets: [{
+                                                  label: `${city} Model Performance (%)`,
+                                                  data: [
+                                                      metrics.accuracy,
+                                                      metrics.precision,
+                                                      metrics.recall,
+                                                      metrics.f1
+                                                  ],
+                                                  backgroundColor: [
+                                                      'rgba(54, 162, 235, 0.7)',
+                                                      'rgba(75, 192, 192, 0.7)',
+                                                      'rgba(255, 206, 86, 0.7)',
+                                                      'rgba(255, 99, 132, 0.7)'
+                                                  ],
+                                                  borderColor: [
+                                                      'rgba(54, 162, 235, 1)',
+                                                      'rgba(75, 192, 192, 1)',
+                                                      'rgba(255, 206, 86, 1)',
+                                                      'rgba(255, 99, 132, 1)'
+                                                  ],
+                                                  borderWidth: 1
+                                              }]
+                                          },
+                                          options: {
+                                              responsive: true,
+                                              maintainAspectRatio: false,
+                                              plugins: {
+                                                  legend: {
+                                                      position: 'top',
+                                                  },
+                                                  tooltip: {
+                                                      callbacks: {
+                                                          label: function(context) {
+                                                              return `${context.parsed.y}%`;
+                                                          }
+                                                      }
+                                                  },
+                                                  datalabels: {
+                                                      display: false
+                                                  }
+                                              },
+                                              scales: {
+                                                  y: {
+                                                      beginAtZero: true,
+                                                      max: 100,
+                                                      title: {
+                                                          display: true,
+                                                          text: 'Score (%)'
+                                                      }
+                                                  }
+                                              },
+                                              animation: {
+                                                  duration: 2000,
+                                                  easing: 'easeOutQuart'
+                                              }
+                                          }
+                                      });
+                                  }
+                                  
+                                  // Add AQI category background colors to chart
+                                  function addAQICategoryBackground(chart) {
+                                      const yScale = chart.scales.y;
+                                      const ctx = chart.ctx;
+                                      
+                                      // Good (0-50)
+                                      drawBackground(ctx, yScale, 0, 50, 'rgba(40, 167, 69, 0.1)');
+                                      // Moderate (51-100)
+                                      drawBackground(ctx, yScale, 51, 100, 'rgba(255, 193, 7, 0.1)');
+                                      // Unhealthy for Sensitive Groups (101-150)
+                                      drawBackground(ctx, yScale, 101, 150, 'rgba(253, 126, 20, 0.1)');
+                                      // Unhealthy (151-200)
+                                      drawBackground(ctx, yScale, 151, 200, 'rgba(220, 53, 69, 0.1)');
+                                      // Very Unhealthy (201-300)
+                                      drawBackground(ctx, yScale, 201, 300, 'rgba(156, 39, 176, 0.1)');
+                                      // Hazardous (301+)
+                                      drawBackground(ctx, yScale, 301, yScale.max, 'rgba(136, 14, 79, 0.1)');
+                                  }
+                                  
+                                  // Draw background rectangle for AQI categories
+                                  function drawBackground(ctx, yScale, yMin, yMax, color) {
+                                      const top = yScale.getPixelForValue(yMax);
+                                      const bottom = yScale.getPixelForValue(yMin);
+                                      const height = bottom - top;
+                                      
+                                      if (height <= 0) return;
+                                      
+                                      ctx.save();
+                                      ctx.fillStyle = color;
+                                      ctx.fillRect(
+                                          0,
+                                          top,
+                                          ctx.canvas.width,
+                                          height
+                                      );
+                                      ctx.restore();
+                                  }
+                              </script>
+                          
+                              <!-- Bootstrap JS -->
+                              <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                          </body>
+                          </html>
+                        
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #f0f0f0;
+          padding: 20px;
+          color: rgba(90, 5, 5, 0.3);
+        }
+        .chart-container {
+          margin-bottom: 20px;
+          text-align: center;
+        }
+        .chart-title {
+          margin-top: 10px;
+          font-size: 18px;
+          font-weight: bold;
+        }
+      </style>
+    <style>
+        .container {
+          font-family: Arial, sans-serif;
+          text-align: center;
+          padding: 20px;
+        }
+        .title {
+          font-size: 28px;
+          font-weight: bold;
+          margin: 20px 0;
+          color: #333;
+          animation: fadeInUp 1s ease-out;
+        }
+        .subtitle {
+          font-size: 24px;
+          font-weight: normal;
+          margin: 10px 0;
+          color: #666;
+          animation: fadeInUp 1s ease-out;
+        }
+        .margin-line {
+          border-top: 2px solid #ccc;
+          margin: 20px auto;
+          width: 50%;
+          animation: fadeIn 1s ease-out;
+        }
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        .text-message {
+    margin: 20px 0;
+    font-size: 18px;
+    color: #444;
+    animation: fadeIn 1s ease-out;
+  }
+
+      </style>
+        {% if aqi is not None %}
+        <div class="container">
+            <h2 class="title mt-4">Results for {{ location }} in {{ year }}</h2>
+            <h1 class="subtitle">Fossil Fuel Usage: {{ fossil_fuel_usage }}</h1>
+            <div class="margin-line"></div>
+
+            <div class="random-paragraph" id="randomParagraph"></div>
+            <div class="margin-line"></div>
+
+      
+          <div class="row">
+            <div class="col-4 chart-container">
+                <p class="subtitle">AQI: {{ aqi }}</p>
+              <canvas id="aqiChart" width="200" height="200"></canvas>
+              <div class="chart-title">AQI</div>
+              <div id="aqiText" class="text-message"></div>
+
+            </div>
+            <div class="col-4 chart-container">
+                <p class="subtitle">WQI: {{ wqi }}</p>
+
+              <canvas id="wqiChart" width="200" height="200"></canvas>
+              <div class="chart-title">WQI</div>
+              <div id="wqiText" class="text-message"></div>
+
+            </div>
+            <div class="col-4 chart-container">
+                <p class="subtitle">RII: {{ rii }}</p>
+
+              <canvas id="riiChart" width="200" height="200"></canvas>
+              <div class="chart-title">RII</div>
+              <div id="riiText" class="text-message"></div>
+
+            </div>
+          </div><br><br><br>
+      
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              // Data for the pie chart slices (assuming these values are available in your template context)
+              var aqiValue = {{ aqi }};
+              var wqiValue = {{ wqi }};
+              var riiValue = {{ rii }};
+      
+              // Colors for the pie chart slices
+              var colors = [
+                ['rgba(255, 99, 132, 0.8)', 'rgba(211, 211, 211, 0.3)'],
+                ['rgba(54, 162, 235, 0.8)', 'rgba(211, 211, 211, 0.3)'],
+                ['rgba(255, 206, 86, 0.8)', 'rgba(211, 211, 211, 0.3)']
+              ];
+      
+              // Chart.js configurations
+              var chartConfigs = [
+                {
+                  id: 'aqiChart',
+                  label: 'AQI',
+                  value: aqiValue,
+                  remaining: 200 - aqiValue,
+                  colors: colors[0]
+                },
+                {
+                  id: 'wqiChart',
+                  label: 'WQI',
+                  value: wqiValue,
+                  remaining: 100 - wqiValue,
+                  colors: colors[1]
+                },
+                {
+                  id: 'riiChart',
+                  label: 'RII',
+                  value: riiValue,
+                  remaining: 100 - riiValue,
+                  colors: colors[2]
+                }
+              ];
+      
+              // Create charts dynamically
+              chartConfigs.forEach(function(config) {
+                var ctx = document.getElementById(config.id).getContext('2d');
+                var chart = new Chart(ctx, {
+                  type: 'pie',
+                  data: {
+                    labels: [config.label, 'Remaining'],
+                    datasets: [{
+                      data: [config.value, config.remaining],
+                      backgroundColor: config.colors,
+                      borderColor: ['rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 0.8)'],
+                      borderWidth: 1
+                    }]
+                  },
+                  options: {
+                    responsive: true,
+                    plugins: {
+                      legend: { display: false },
+                      tooltip: {
+                        callbacks: {
+                          label: function(context) {
+                            return context.label + ': ' + context.raw.toFixed(2) + '%';
+                          }
+                        }
+                      }
+                    },
+                    animation: {
+                      animateRotate: true,
+                      animateScale: true
+                    }
+                  }
+                  
+                });
+              });
+              // Generate dynamic text messages based on AQI, WQI, and RII values
+      function getAQIMessage(aqi) {
+        if (aqi > 150) return ">AIR QUALITY INDEX< is dangerously high.";
+        if (aqi > 100) return ">AIR QUALITY INDEX< is unhealthy.";
+        if (aqi > 50) return ">AIR QUALITY INDEX< is moderate.";
+        if (aqi > 30) return ">AIR QUALITY INDEX< is acceptable.";
+        return ">AIR QUALITY INDEX< is excellent.";
+      }
+
+      function getWQIMessage(wqi) {
+        if (wqi > 80) return "Water quality index is excellent.";
+        if (wqi > 60) return "Water quality index is good.";
+        if (wqi > 40) return "Water quality index is fair.";
+        if (wqi > 20) return "Water quality index is poor.";
+        return "Water quality index is very poor.";
+      }
+
+      function getRIIMessage(rii) {
+        if (rii > 150) return "Relative Importance Index is very high.";
+        if (rii > 100) return "Relative Importance Index is high.";
+        if (rii > 50) return "Relative Importance Index is moderate.";
+        if (rii > 30) return "Relative Importance Index is low.";
+        return "Relative Importance Index is very low.";
+      }
+
+      // Update text messages
+      document.getElementById('aqiText').innerText = getAQIMessage(aqiValue);
+      document.getElementById('wqiText').innerText = getWQIMessage(wqiValue);
+      document.getElementById('riiText').innerText = getRIIMessage(riiValue);
+// Random Paragraphs for Environment Sustainability
+var paragraphs = [
+        "Environmental sustainability involves making decisions and taking actions that are in the interests of protecting the natural world, with particular emphasis on preserving the capability of the environment to support human life. This approach is crucial for ensuring that we do not exhaust the resources we rely on, allowing future generations to meet their own needs.",
+        "The transition to renewable energy sources like wind, solar, and hydropower is a fundamental step toward environmental sustainability. These sources not only reduce our dependence on fossil fuels but also minimize the adverse through recycling and composting is an essential component of environmental sustainability. By diverting waste from landfills and reducing the need for new raw materials, recycling helps conserve resources, save energy, and reduce greenhouse gas emissions, contributing to a healthier planet.",
+      "Biodiversity plays a critical role in maintaining ecological balance and supporting life on Earth. Protecting diverse ecosystems ensures the resilience of nature against threats such as climate change, pollution, and habitat destruction, thereby safeguarding the benefits they provide to humanity, including clean air, water, and fertile soil.",
+        "Sustainable agriculture practices, such as crop rotation, organic farming, and conservation tillage, are vital for maintaining soil health and reducing the environmental impact of farming. These practices help preserve the integrity of the land, enhance biodiversity, and ensure that agricultural activities can continue to support human populations in the long term."
+      ];
+
+      // Display a random paragraph
+      function displayRandomParagraph() {
+        var randomIndex = Math.floor(Math.random() * paragraphs.length);
+        document.getElementById('randomParagraph').innerText = paragraphs[randomIndex];
+      }
+
+      displayRandomParagraph();
+            });
+          </script>
+        {% endif %}
+                       
+    <!-- About End -->
+
+    <!-- Pricing Start -->
+
+
+
+    <!-- User Information End -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    {% if messages %}
+    {% for message in messages %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+    <script>swal({
+            title: "Warning!",
+            text: "{{message}}",
+            icon: "warning",
+            button: "OK",
+        });
+    </script>
+
+    {% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+    <script>swal({
+            title: "Info :)",
+            text: "{{message}}",
+            icon: "info",
+            button: "OK",
+        });
+    </script>
+    {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+    <script>swal({
+            title: "Error :)",
+            text: "{{message}}",
+            icon: "error",
+            button: "OK",
+        });
+    </script>
+    {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+    <script>swal({
+            title: "Success :)",
+            text: "{{message}}",
+            icon: "success",
+            button: "OK",
+        });
+    </script>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-primary text-white footer mt-5 pt-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container py-5 px-lg-5">
+            <div class="row gy-5 gx-4 pt-5">
+                <div class="col-12">
+                    <h2 class="fw-bold text-white mb-4">AIR QUALITY INDEX</h2>
+
+                </div>
+                <div class="col-lg-5 col-md-12">
+                    <div class="row gy-5 g-4">
+                        <div class="col-md-6">
+                            <h5 class="fw-bold text-white mb-4">Shortcuts</h5>
+                            <a class="btn btn-link" href="{% url 'userDashboard' %}">Dashboard</a>
+                           
+                            
+                            <a class="btn btn-link" href="{% url 'prediction' %}">Analysis</a>
+
+
+
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="fw-bold text-white mb-4">Useful Links</h5>
+                            <a class="btn btn-link" href="{% url 'feedback' %}">Feedback</a>
+                            <a class="btn btn-link" href="{% url 'log_out' %}">Logout</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <h5 class="fw-bold text-white mb-4">Get In Touch</h5>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i> Gayatri nagar, Hyderabad, Telangana</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i> 9959382287</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@codeleaf.in</p>
+
+                </div>
+                <div class="col-md-6 col-lg-4 mt-lg-n5">
+                    <div class="bg-light rounded" style="padding: 30px;">
+                        <img class="img-fluid animated zoomIn" src="{% static 'farmer/img/img-2.avif' %}"
+                            alt="Environment Sustainability Hero Image">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container px-lg-5">
+            <div class="copyright">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                        &copy; <a class="border-bottom" href="#">AIR QUALITY INDEX</a>, All Right Reserved.
+
+                        <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+                        Designed By <a class="border-bottom" href="https://codeleaf.in" target="_blank">codeleaf</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-secondary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'farmer/lib/wow/wow.min.js' %}"></script>
+
+    <script src="{% static 'farmer/lib/easing/easing.min.js' %}"></script>
+
+    <script src="{% static 'farmer/lib/waypoints/waypoints.min.js' %}"></script>
+
+    <script src="{% static 'farmer/lib/counterup/counterup.min.js' %}"></script>
+
+    <script src="{% static 'farmer/lib/owlcarousel/owl.carousel.min.js' %}"></script>
+
+
+    <!-- Template Javascript -->
+    <script src="{% static 'farmer/js/main.js' %}"></script>
+
+</body>
+
+</html>
